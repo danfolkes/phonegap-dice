@@ -1,5 +1,6 @@
 <html>
 	<head>
+		<meta name="viewport" content="width=device-width; maximum-scale=1; minimum-scale=1;" />
 		<script src="js/jquery-1.10.2.min.js" ></script>
 		<script src="js/amplify.min.js" ></script>
 		<script src="js/diceroller.js"></script>
@@ -161,7 +162,7 @@ border-radius: 0;
 				
 			}
 			.gobuttons.roll{
-				width:40%;
+				width:30%;
 				font-weight: 500;
 				color: white;
 				background: #46ca5e;
@@ -210,6 +211,10 @@ border-radius: 0;
 				background:#FFF;
 				text-align:center;
 				position: relative;
+			}
+			.previousruns {
+				height:3em;
+				width:10%;
 			}
 			.eval {
 				background-color:rgba(255,255,255,.5);
@@ -263,12 +268,32 @@ border-radius: 0;
 				line-height:22px;
 				width:10%;
 			}
+			.inputdiv .key {
+				display:none;
+			}
+			@media only screen and (orientation : landscape) { 
+				.inputdiv    {
+					width:50%;
+					float:left;
+				}
+				.outputdiv    {
+					width:50%;
+					float:left;
+				}
+				.inputdiv .key {
+					display:block;
+				}
+				.outputdiv .key {
+					display:none;
+				}
+			}
+			
 		</style>
 	</head>
 	<body>
-		<div>
+		<div class='inputdiv'>
 			<div class='topbar'>
-				<h4><img src='img/badaman_dice.png' class='dicelogo' />&nbsp;&nbsp;Dice Roller for Nerds&nbsp;&nbsp;<img src='img/badaman_dice.png' class='dicelogo' /></h4>
+				<h4><img src='img/badaman_dice.png' class='dicelogo' />&nbsp;&nbsp;Dice Calc&nbsp;&nbsp;<img src='img/badaman_dice.png' class='dicelogo' /></h4>
 			</div>
 			<textarea id="input"  rows="5" placeholder="Roll Calculations...">
 //Set Level
@@ -279,19 +304,20 @@ L=5
 d(4,L)
 			</textarea>
 			<div class='buttonholder'>
-				<input class='gobuttons roll' type='button'  id='go' value='!!!' onclick='doGo();'/>
-				<input class='gobuttons clearabove' type='button' id='clearabove' value='&uArr;' onclick='doClear(true, false);'/>
-				<input class='gobuttons clearbelow' type='button' id='clearbelow' value='&dArr;' onclick='doClear();'/>
+				<a 		class='gobuttons roll' href="#" onclick='doGo();return false;'><img src='img/badaman_dice.png' style='height:100%' class='dicelogo' /></a>
+				<input class='gobuttons clearabove' type='button' id='clearabove' 	value='&uArr;' onclick='doClear(true, false);'/>
+				
+				<select class='previousruns' style=''>
+					<option>----</option>
+					<option>--clear--</option>
+				</select>
 				<input class='gobuttons diceselect' type='image'  src='img/Anonymous_Keyboard_1_icon.png' onclick="toggleDiceSelect();"/>
 				<div class='diceselectbox' style='display:block'>
 					<input class='gobuttons question' type='button' value='d6' onclick="insertAtCaret('input','d(6)');"/>
-					<input class='gobuttons question' type='button' value='d2' onclick="insertAtCaret('input','d(20)');"/>
+					<input class='gobuttons question' type='button' value='d20' onclick="insertAtCaret('input','d(20)');"/>
 					
-					<input class='gobuttons question' type='button' value='d(' onclick="insertAtCaret('input','d(');"/>
+					<input class='gobuttons question' type='button' value='(' onclick="insertAtCaret('input','(');"/>
 					<input class='gobuttons question' type='button' value=')' onclick="insertAtCaret('input',')');"/>
-					
-					
-					
 					
 					<input class='gobuttons question' type='button' value='+' onclick="insertAtCaret('input','+');"/>
 					<input class='gobuttons question' type='button' value='-' onclick="insertAtCaret('input','-');"/>
@@ -314,17 +340,50 @@ d(4,L)
 				</div>
 			</div>
 			<div class='buttonholder previousrunshold' style='display:none;'>
-				<select class='previousruns' style='width:50%;height:3em;'>
-					<option>----</option>
-				</select>
-				<input class='gobuttons clearbelow' type='button' value=' ' onclick="doClear(false, false,true);"/>
+				
 			</div>
+			
+		<div class='key'>
+			<h4>Key:</h4>
+			<p>
+				dice = d(6); 2d6 = d(6,2); 
+				<br/>modify each roll: d(6,2,-1);  
+				<br/>make variables: Lvl = 7; 
+				<br/>use them: d(4,Lvl); 
+				<br/>do math: d(6)*2+Lvl; 
+				<br/>round down: rdown(d(6)/2); 
+				<br/>round up: rup(2/5); 
+				<br/>use any javascript functions: Math.Random();
+				<br/>
+				<br/>===
+				<br/><b>Simple Examples:</b>
+				<br/>Set a level:
+				<pre>L=6;</pre>
+				<br/>=
+				<br/>//Magic Missle
+				<br/>//	d(dicetype,how many rolls, modifier per roll)
+				<br/>d(4,(1 + rdown(L / 2)), 1);
+				<br/>=
+				<br/>//Burning Hands 
+				<br/>//	1d4 points of fire damage per caster level (maximum 5d4)
+				<br/>d(4,L)
+				<br/>=
+				<br/>//Floating Disk 
+				<br/>//	Close (25 ft. + 5 ft./2 levels), It can hold 100 pounds of weight per caster level.
+				<br/>25+(5*(1+rdown(L / 2)))//Range
+				<br/>(100*L); //Can Hold
+				<br/>=
+			
+			</p>
+			<a href="https://github.com/danfolkes/phonegap-dice/wiki/Examples">More Examples on Github</a>
 		</div>
-		<div>
+	
+		</div>
+		<div class='outputdiv'>
 			<div>
-				<span id="out"></span>
+				<h4>Results:<input class='clearbelow' type='button' id='clearbelow' 	value='x' onclick='doClear();'/></h4>
+				<div id="out"></div>
 			</div>
-		</div>
 		<div class='key'>
 			<h4>Key:</h4>
 			<pre>dice = d(6); 2d6 = d(6,2); 
@@ -356,6 +415,9 @@ d(4,L)
 =
 			
 			</pre>
+			<a href="https://github.com/danfolkes/phonegap-dice/wiki/Examples">More Examples on Github</a>
+		</div>
+	
 		</div>
 	</body>
 </html>

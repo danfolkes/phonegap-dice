@@ -19,7 +19,7 @@ function doClear(boolAbove, boolBelow, boolPrev) {
 		var arr = new Array();
 		$(".previousruns option").each(function()
 		{
-			if ($(this).val() != "----")
+			if ($(this).val() != "----" || value != "--clear--")
 				$(this).remove();
 		});
 		$(".previousrunshold").hide();
@@ -30,11 +30,24 @@ function doClear(boolAbove, boolBelow, boolPrev) {
 }
 function doGo() {
 	L = 1;
+	
+	var c = 0;
+	var inputShortcuts = $('#input').val();
+	while( inputShortcuts.search(/[d]\d/g) >= 0 && c < 4)
+	{
+		c++;
+		inputShortcuts.replace(/[d]\d/g, "ddddd");
+	}
+	$('#input').val(inputShortcuts);
+	
 	var arrayOfLines = $('#input').val().split('\n');
 	var output = "";
 	drnTotal = 0.0;
 	drnTotalAll = 0.0;
 	$.each(arrayOfLines, function(index, item) {
+		
+		
+		
 		item = $.trim(item);
 		
 		if (item.length > 0){
@@ -49,7 +62,6 @@ function doGo() {
 					output += "<span class='noneval'>" + item + "</span>";
 				}
 			} catch (e) {
-				
 			}
 		}
 		if(item == "=") {
@@ -60,26 +72,35 @@ function doGo() {
 	});
 	
 	if (output.length > 0) {
-		if (drnTotalAll < drnTotal)
-			drnTotalAll = drnTotal;
+		if (drnTotalAll < drnTotal) {
+			output += "<div class='subtotal'>=Total: " + drnTotal + "</div>";
+			drnTotalAll += drnTotal;
+			drnTotal = 0;
+		}
+			
+		
+		var inputVal = $("#input").val();
+			
 		output =  "<div class='grandtotal'>Total of Totals:" + drnTotalAll + "</div>" + output;
 		output += "<div class='grandtotal'>Total of Totals:" + drnTotalAll + "</div>";
 		$("#out").html("<div class='outputbox'>" + output + "</div>" + $("#out").html() );
 		
-		amplify.store( "drnInput", $("#input").val() );
+		amplify.store( "drnInput",  inputVal);
 		amplify.store( "drnOutput", $("#out").html() );
-		
+		$('.previousruns option[value="' + inputVal + '"]').each(function(){
+			$(this).remove();
+		});
 		if ($(".previousruns")[0].length <= 1) {
-			$(".previousruns")[0].options[$(".previousruns")[0].length] = new Option($("#input").val(), $("#input").val());
+			$(".previousruns")[0].options[$(".previousruns")[0].length] = new Option(inputVal, inputVal);
 		} else
-			$("select option").eq(1).before($("<option></option>").val($("#input").val()).html($("#input").val()));
+			$("select option").eq(1).before($("<option></option>").val(inputVal).html(inputVal));
 
 		$(".previousrunshold").show();
 		
 		var arr = new Array();
 		$(".previousruns option").each(function()
 		{
-			if ($(this).val() != "----")
+			if ($(this).val() != "----" || $(this).val() != "--clear--")
 				arr.push($(this).val());
 		});
 		amplify.store( "drnPrevious", arr );
@@ -111,23 +132,18 @@ function onDeviceReady() {
 	if (drnPrevious != null)
 	{
 		$.each(drnPrevious, function( index, value ) {
-			if (value != "----" || value != "--previous--") {
+			if (value != "----" || value != "--previous--" || value != "--clear--") {
 				$(".previousruns")[0].options[$(".previousruns")[0].length] = new Option(value, value);
 				$(".previousrunshold").show();
 			}
 		});
 	}
-	
-	
-	
-	$( ".diceselect" ).change(function() {
-		if ($( this ).val() != '---')
-			insertAtCaret('input',$( this ).val());
-	});
 	$( ".previousruns" ).change(function() {
-		if ($( this ).val() != '----' || value != "--previous--") {
+		if ($( this ).val() != '----' && value != "--previous--" && value != "--clear--") {
 			$('#input').val($( this ).val());
 			$('#input').keydown();
+		} else if (value == "--clear--") {
+			doClear(false,false,true);
 		}
 	});
 
