@@ -1,42 +1,361 @@
-<!DOCTYPE html>
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <title>Hello World</title>
-    </head>
-    <body>
-        <div class="app">
-            <h1>PhoneGap</h1>
-            <div id="deviceready">
-                <p class="status pending blink">Connecting to Device</p>
-                <p class="status complete blink hide">Device is Ready</p>
-            </div>
-        </div>
-        <script type="text/javascript" src="phonegap.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-        <script type="text/javascript">
-            app.initialize();
-        </script>
-    </body>
+	<head>
+		<script src="js/jquery-1.10.2.min.js" ></script>
+		<script src="js/amplify.min.js" ></script>
+		<script src="js/diceroller.js"></script>
+		<style>
+			* {
+				font-family:"Helvetica Neue",Helvetica,Roboto,Arial,sans-serif;
+			}
+			html {
+				background:#efeff4;
+			}	
+			.topbar {
+				background: #f8f8f8;
+				border-bottom: 1px solid #c8c8c8;
+				box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+				color: #000;
+				-webkit-font-smoothing: antialiased;
+				padding:.5em;
+			}
+			.topbar h4 {
+				margin:0;padding:0;
+				text-align: center;
+				color: #000;
+				
+			}
+			.topbar h4 .dicelogo {
+				height:2em;
+				vertical-align:middle;
+			}
+			
+			#input {
+			
+			margin: 0em;
+font: -webkit-small-control;
+color: initial;
+letter-spacing: normal;
+word-spacing: normal;
+text-transform: none;
+text-indent: 0px;
+text-shadow: none;
+display: inline-block;
+text-align: start;
+
+			
+			-webkit-rtl-ordering: logical;
+-webkit-user-select: text;
+flex-direction: column;
+resize: auto;
+cursor: auto;
+padding: 2px;
+white-space: pre-wrap;
+word-wrap: break-word;
+
+
+			
+			-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+
+			
+			display: inline-block;
+vertical-align: top;
+-webkit-tap-highlight-color: rgba(0,0,0,0);
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+
+
+			
+			margin: 0;
+padding: 0;
+font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif;
+font-size: 16px;
+background: white;
+border: 0;
+border-radius: 0;
+
+			
+			resize: none;
+			
+				width: 100%;
+height: 4em;
+line-height: 22px;
+padding: 8px .5em 8px .5em;
+			}
+			#out {
+				margin: -12px 0 20px;
+padding: 0 12px;
+font-size: 14px;
+color: #7c7b83;
+text-shadow: 0 1px rgba(255,255,255,0.2);
+			}
+			.outputbox{
+			
+			display: block;
+-webkit-margin-before: 1em;
+-webkit-margin-after: 1em;
+-webkit-margin-start: 0px;
+-webkit-margin-end: 0px;
+
+
+			font: inherit;
+vertical-align: baseline;
+
+
+				border:1px solid grey;
+				border-top:1px solid black;
+				
+				background: #F5F5F5; /* for non-css3 browsers */
+				padding:.5em;
+				margin-top:.5em;
+				margin-bottom:.5em;
+				
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+
+background: #FFF;
+			}
+			.gobuttons {
+			
+			align-items: flex-start;
+text-align: center;
+cursor: default;
+			-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+
+
+			display: inline-block;
+vertical-align: top;
+-webkit-tap-highlight-color: rgba(0,0,0,0);
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+
+
+			margin: 0;
+			margin-bottom:1px;
+padding: 0;
+font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif;
+font-size: 16px;
+background: white;
+border: 0;
+border-radius: 0;
+				
+				
+				width:18%;
+				max-width:300px;
+				display: inline-block;
+				vertical-align: top;
+				height: 40px;
+				line-height: 40px;
+				padding: 0 1px;
+				color: #2087fc;
+				text-align: center;
+				background: transparent;
+				border-radius: 4px;
+				box-shadow: inset 0 0 0 1px #2087fc;
+				-webkit-appearance: none;
+				box-shadow: none;
+				
+			}
+			.gobuttons.roll{
+				width:40%;
+				font-weight: 500;
+				color: white;
+				background: #46ca5e;
+				box-shadow: none;
+			}
+			.gobuttons.dicelogo {
+				width:50%;
+				padding-right: 15%;
+				padding-left: 15%;
+				
+			}
+			.gobuttons.clearabove{
+				width:10%;
+				color: white;
+				background-color:red;
+				font-weight:bold;
+			}
+			.gobuttons.diceselect{
+				width:10%;
+				color: white;
+				background-color:blue;
+				font-weight:bold;
+			}
+			.gobuttons.clearbelow{
+				width:10%;
+				color: white;
+				background-color:#FFE9D6;
+				background: #F5F5F5; /* for non-css3 browsers */
+				filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F5F5F5', endColorstr='#CFCFCF'); /* for IE */
+				background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#CFCFCF)); /* for webkit browsers */
+				background: -moz-linear-gradient(top,  #F5F5F5,  #CFCFCF); /* for firefox 3.6+ */
+				background:none;
+				background-color:red;
+				font-weight:bold;
+			}
+			.gobuttons.question {
+				width:20%;
+				max-width:100px;
+				font-weight:normal;
+				color: white;
+				background-color:grey;
+			}
+			.buttonholder {
+				padding-top:1em;
+				padding-bottom:1em;
+				background:#FFF;
+				text-align:center;
+				position: relative;
+			}
+			.eval {
+				background-color:rgba(255,255,255,.5);
+				color:black;
+			}
+			.evalue{
+				color:#115E04; /*green*/
+			}
+			.evaltext{
+				color:#7A7A7A; /*gray*/
+				font-size:.8em;
+			}
+			.noneval{
+				color:#7A7A7A; /*gray*/
+				font-size:.8em;
+			}
+			
+			.subtotal{
+				color:#7D1D1D; /*red*/
+				border-top:1px dashed red;
+				border-bottom:1px dashed red;
+			}
+			.grandtotal{
+				color:#3D7D1D; /*green*/
+				font-weight:bold;
+				border-top:1px dashed #3D7D1D;
+				border-top:1px dashed #3D7D1D;
+			}
+			.key {
+				border:1px solid #3D7D1D;
+				background-color:white;
+				border-radius:5px;
+			}
+			.key h4{
+				margin:0px;
+				padding:1px;
+			}
+			.key pre {
+				width:100%;
+				overflow:scroll;
+				font-size:.9em;
+			}
+			.diceselectbox {
+				display:block;
+				
+				width:100%;
+			}
+			.diceselectbox .gobuttons {
+				padding: 0 2px;
+				height: 22px;
+				line-height:22px;
+				width:10%;
+			}
+		</style>
+	</head>
+	<body>
+		<div>
+			<div class='topbar'>
+				<h4><img src='img/badaman_dice.png' class='dicelogo' />&nbsp;&nbsp;Dice Roller for Nerds&nbsp;&nbsp;<img src='img/badaman_dice.png' class='dicelogo' /></h4>
+			</div>
+			<textarea id="input"  rows="5" placeholder="Roll Calculations...">
+//Set Level
+L=5
+=
+//Burning Hands 
+// - 1d4 points of fire damage per caster level
+d(4,L)
+			</textarea>
+			<div class='buttonholder'>
+				<input class='gobuttons roll' type='button'  id='go' value='!!!' onclick='doGo();'/>
+				<input class='gobuttons clearabove' type='button' id='clearabove' value='&uArr;' onclick='doClear(true, false);'/>
+				<input class='gobuttons clearbelow' type='button' id='clearbelow' value='&dArr;' onclick='doClear();'/>
+				<input class='gobuttons diceselect' type='image'  src='img/Anonymous_Keyboard_1_icon.png' onclick="toggleDiceSelect();"/>
+				<div class='diceselectbox' style='display:block'>
+					<input class='gobuttons question' type='button' value='d6' onclick="insertAtCaret('input','d(6)');"/>
+					<input class='gobuttons question' type='button' value='d2' onclick="insertAtCaret('input','d(20)');"/>
+					
+					<input class='gobuttons question' type='button' value='d(' onclick="insertAtCaret('input','d(');"/>
+					<input class='gobuttons question' type='button' value=')' onclick="insertAtCaret('input',')');"/>
+					
+					
+					
+					
+					<input class='gobuttons question' type='button' value='+' onclick="insertAtCaret('input','+');"/>
+					<input class='gobuttons question' type='button' value='-' onclick="insertAtCaret('input','-');"/>
+					<input class='gobuttons question' type='button' value='*' onclick="insertAtCaret('input','*');"/>
+					<input class='gobuttons question' type='button' value='/' onclick="insertAtCaret('input','/');"/>
+					
+					
+					<input class='gobuttons question' type='button' value='0' onclick="insertAtCaret('input','0');"/>
+					<input class='gobuttons question' type='button' value='1' onclick="insertAtCaret('input','1');"/>
+					<input class='gobuttons question' type='button' value='2' onclick="insertAtCaret('input','2');"/>
+					<input class='gobuttons question' type='button' value='3' onclick="insertAtCaret('input','3');"/>
+					<input class='gobuttons question' type='button' value='4' onclick="insertAtCaret('input','4');"/>
+					<input class='gobuttons question' type='button' value='5' onclick="insertAtCaret('input','5');"/>
+					<input class='gobuttons question' type='button' value='6' onclick="insertAtCaret('input','6');"/>
+					<input class='gobuttons question' type='button' value='7' onclick="insertAtCaret('input','7');"/>
+					<input class='gobuttons question' type='button' value='8' onclick="insertAtCaret('input','8');"/>
+					<input class='gobuttons question' type='button' value='9' onclick="insertAtCaret('input','9');"/>
+					
+					<input class='gobuttons question' type='button' value='=' onclick="insertAtCaret('input','\r=\r\n');"/>
+				</div>
+			</div>
+			<div class='buttonholder previousrunshold' style='display:none;'>
+				<select class='previousruns' style='width:50%;height:3em;'>
+					<option>----</option>
+				</select>
+				<input class='gobuttons clearbelow' type='button' value=' ' onclick="doClear(false, false,true);"/>
+			</div>
+		</div>
+		<div>
+			<div>
+				<span id="out"></span>
+			</div>
+		</div>
+		<div class='key'>
+			<h4>Key:</h4>
+			<pre>dice = d(6); 2d6 = d(6,2); 
+modify each roll: d(6,2,-1);  
+make variables: Lvl = 7; 
+use them: d(4,Lvl); 
+do math: d(6)*2+Lvl; 
+round down: rdown(d(6)/2); 
+round up: rup(2/5); 
+use any javascript functions: Math.Random();
+
+===
+Examples:
+//Set a level:
+L=6;
+=
+//Magic Missle
+//	d(dicetype,how many rolls, modifier per roll)
+d(4,(1 + rdown(L / 2)), 1);
+=
+//Burning Hands 
+//	1d4 points of fire damage per caster level (maximum 5d4)
+d(4,L)
+=
+//Floating Disk 
+//	Close (25 ft. + 5 ft./2 levels), It can hold 100 pounds of weight per caster level.
+25+(5*(1+rdown(L / 2)))//Range
+(100*L); //Can Hold
+=
+			
+			</pre>
+		</div>
+	</body>
 </html>
