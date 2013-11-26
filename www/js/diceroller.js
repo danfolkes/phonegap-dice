@@ -19,7 +19,7 @@ function doClear(boolAbove, boolBelow, boolPrev) {
 		var arr = new Array();
 		$(".previousruns option").each(function()
 		{
-			if ($(this).val() != "----" || value != "--clear--")
+			if ($(this).val() != "----" && $(this).val() != "--clear--" && $(this).val() != "--defaults--")
 				$(this).remove();
 		});
 		$(".previousrunshold").hide();
@@ -28,79 +28,97 @@ function doClear(boolAbove, boolBelow, boolPrev) {
 	amplify.store( "drnInput", $("#input").val() );
 	amplify.store( "drnOutput", $("#out").html() );
 }
+function diceSwap(match, offset, fullstring)
+  {
+	var retS = "";
+	var re = /D/gi;
+	var newstr = match.replace(re, "d");
+
+	var splitdice = newstr.split('d');
+	if (splitdice.length == 2) {
+		if (splitdice[0].length == 0)
+			retS = "d(" + splitdice[1] + ")";
+		else 
+			retS = "d(" + splitdice[1] + "," + splitdice[0] + ")";
+			
+	}
+		
+	else if (splitdice.length == 2)
+		return "d(" + splitdice[1] + ")";
+	
+	if (retS.length == 0)
+		return match;
+    return retS;
+  }
+function toggleLayout() {
+	$( "body" ).toggleClass( "land" );
+	amplify.store( "drnLayoutPort", !$( "body" ).hasClass("land") );
+}
 function doGo() {
 	L = 1;
 	
-	var c = 0;
+	//do d6 and 2d6 swap:
 	var inputShortcuts = $('#input').val();
-	while( inputShortcuts.search(/[d]\d/g) >= 0 && c < 4)
-	{
-		c++;
-		inputShortcuts.replace(/[d]\d/g, "ddddd");
-	}
+	var test = /([0-9]|[1-9][0-9]|100)[D|d]([0-9]|[1-9][0-9]|100)\b/g;
+	inputShortcuts  = inputShortcuts.replace(test, diceSwap);
+	test = /[D|d]([0-9]|[1-9][0-9]|100)\b/g;
+	inputShortcuts  = inputShortcuts.replace(test, diceSwap);
+
 	$('#input').val(inputShortcuts);
 	
 	var arrayOfLines = $('#input').val().split('\n');
 	var output = "";
 	drnTotal = 0.0;
 	drnTotalAll = 0.0;
+	var longestResult = 0;
 	$.each(arrayOfLines, function(index, item) {
-		
-		
-		
 		item = $.trim(item);
-		
 		if (item.length > 0){
 			try {
 				var evali = doEval("" + item, true, false) / doEval("" + item, true, false);
 				
 				if (output.length > 0)
-						output += "<br/>";
+						output += "";
 				if (!isNaN(evali)){
-					output += "<span class='eval'><span class='evalue'>" + doEval("" + item) + "</span> => <span class='evaltext'>" + item + "</span></span>";
+					var evalue = ""+doEval("" + item);
+					if (evalue.length > longestResult)
+						longestResult = evalue.length;
+					output += "<div class='eval'><span class='evalue'>" + evalue + "</span> => <span class='evaltext'>" + item + "</span></div>";
 				} else {
-					output += "<span class='noneval'>" + item + "</span>";
+					output += "<div class='noneval'>" + item + "</div>";
 				}
 			} catch (e) {
 			}
 		}
 		if(item == "=") {
-			output += "<div class='subtotal'>=Total: " + drnTotal + "</div>";
+			output += "<div class='subtotal'> Total: " + drnTotal + "</div>";
 			drnTotalAll += drnTotal;
 			drnTotal = 0;
 		}
 	});
 	
 	if (output.length > 0) {
-		if (drnTotalAll < drnTotal) {
-			output += "<div class='subtotal'>=Total: " + drnTotal + "</div>";
+		if (drnTotal > 0) {
+			output += "<div class='subtotal'> Total: " + drnTotal + "</div>";
 			drnTotalAll += drnTotal;
 			drnTotal = 0;
 		}
-			
 		
 		var inputVal = $("#input").val();
 			
-		output =  "<div class='grandtotal'>Total of Totals:" + drnTotalAll + "</div>" + output;
-		output += "<div class='grandtotal'>Total of Totals:" + drnTotalAll + "</div>";
+		output =  ""  + output ;
+		output += "<div class='grandtotal'>All Totals:" + drnTotalAll + "</div>";
 		$("#out").html("<div class='outputbox'>" + output + "</div>" + $("#out").html() );
 		
 		amplify.store( "drnInput",  inputVal);
 		amplify.store( "drnOutput", $("#out").html() );
-		$('.previousruns option[value="' + inputVal + '"]').each(function(){
-			$(this).remove();
-		});
-		if ($(".previousruns")[0].length <= 1) {
-			$(".previousruns")[0].options[$(".previousruns")[0].length] = new Option(inputVal, inputVal);
-		} else
-			$("select option").eq(1).before($("<option></option>").val(inputVal).html(inputVal));
-
-		$(".previousrunshold").show();
+		
+		insertPrevious(inputVal);
 		
 		var arr = new Array();
 		$(".previousruns option").each(function()
 		{
-			if ($(this).val() != "----" || $(this).val() != "--clear--")
+			if ($(this).val() != "----" && $(this).val() != "--clear--"&& $(this).val() != "--defaults--")
 				arr.push($(this).val());
 		});
 		amplify.store( "drnPrevious", arr );
@@ -109,16 +127,31 @@ function doGo() {
 		//options[options.length] = new Option($("#input").val(), $("#input").val(), true, true);
 	}
 }
+function insertPrevious(inputVal) {
+	$('.previousruns option[value="' + inputVal + '"]').each(function(){
+		$(this).remove();
+	});
+	if ($(".previousruns")[0].length > 50) {
+		$(".previousruns option:nth-last-child(3)").remove();
+	}
+	
+	if ($(".previousruns")[0].length <= 1) {
+		$(".previousruns")[0].options[$(".previousruns")[0].length] = new Option(inputVal, inputVal);
+	} else
+		$("select option").eq(1).before($("<option></option>").val(inputVal).html(inputVal));
+
+}
 
 function onDeviceReady() {
 	var drnInput = amplify.store( "drnInput" );
 	var drnOutput = amplify.store( "drnOutput" );
 	var drnPrevious = amplify.store( "drnPrevious" );
+	var drnLayoutPort = amplify.store( "drnLayoutPort" );
 	
 	drnInput = typeof drnInput !== 'undefined' ? drnInput : "";
 	drnOutput = typeof drnOutput !== 'undefined' ? drnOutput : "";
 	drnPrevious = typeof drnPrevious !== 'undefined' ? drnPrevious : null;
-	
+	drnLayoutPort = typeof drnLayoutPort !== 'undefined' ? drnLayoutPort : true;
 	
 	if (drnOutput.length > 0) {
 		$("#out").html(drnOutput);
@@ -129,24 +162,40 @@ function onDeviceReady() {
 	}
 	$('#input').css('overflow', 'hidden').autogrow();
 	
+	$(".previousruns")[0].options[$(".previousruns")[0].length] = new Option("----");
 	if (drnPrevious != null)
 	{
 		$.each(drnPrevious, function( index, value ) {
-			if (value != "----" || value != "--previous--" || value != "--clear--") {
-				$(".previousruns")[0].options[$(".previousruns")[0].length] = new Option(value, value);
-				$(".previousrunshold").show();
-			}
+			insertPrevious(value);
 		});
 	}
+	$(".previousruns")[0].options[$(".previousruns")[0].length] = new Option("--clear--");
+	$(".previousruns")[0].options[$(".previousruns")[0].length] = new Option("--defaults--");
+	
 	$( ".previousruns" ).change(function() {
-		if ($( this ).val() != '----' && value != "--previous--" && value != "--clear--") {
+		if ($( this ).val() != '----' && $( this ).val() != "--previous--" && $( this ).val() != "--clear--" && $( this ).val() != "--defaults--") {
 			$('#input').val($( this ).val());
 			$('#input').keydown();
-		} else if (value == "--clear--") {
-			doClear(false,false,true);
+		} else if ($( this ).val() == "--clear--") {
+			if (confirm('Clear History?')) {
+				doClear(false,false,true);
+			}
 		}
+		else if ($( this ).val() == "--defaults--") {
+			LoadPreviousDefaults();
+		}
+		$( ".previousruns" ).val("----");
 	});
+	
+	if (drnLayoutPort == false) {
+		$("body").addClass("land");
+	} 
 
+}
+function LoadPreviousDefaults() {
+	insertPrevious("d(6)");
+	insertPrevious("d(20)");
+	
 }
 function toggleDiceSelect() {
 	$(".diceselectbox").toggle();

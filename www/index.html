@@ -81,7 +81,6 @@ border-radius: 0;
 			
 				width: 100%;
 height: 4em;
-line-height: 22px;
 padding: 8px .5em 8px .5em;
 			}
 			#out {
@@ -90,6 +89,8 @@ padding: 0 12px;
 font-size: 14px;
 color: #7c7b83;
 text-shadow: 0 1px rgba(255,255,255,0.2);
+
+line-height: 1em;
 			}
 			.outputbox{
 			
@@ -175,13 +176,13 @@ border-radius: 0;
 				
 			}
 			.gobuttons.clearabove{
-				width:10%;
+				width:7%;
 				color: white;
 				background-color:red;
 				font-weight:bold;
 			}
 			.gobuttons.diceselect{
-				width:10%;
+				width:16%;
 				color: white;
 				background-color:blue;
 				font-weight:bold;
@@ -198,8 +199,8 @@ border-radius: 0;
 				background-color:red;
 				font-weight:bold;
 			}
-			.gobuttons.question {
-				width:20%;
+			.diceselectbox .question {
+				
 				max-width:100px;
 				font-weight:normal;
 				color: white;
@@ -214,18 +215,19 @@ border-radius: 0;
 			}
 			.previousruns {
 				height:3em;
-				width:10%;
+				width:16%;
 			}
-			.eval {
+			#out .eval {
 				background-color:rgba(255,255,255,.5);
 				color:black;
+				font-family:monospace;
 			}
 			.evalue{
-				color:#115E04; /*green*/
+				color:#000; /*green*/
 			}
 			.evaltext{
 				color:#7A7A7A; /*gray*/
-				font-size:.8em;
+				font-size:.9em;
 			}
 			.noneval{
 				color:#7A7A7A; /*gray*/
@@ -234,14 +236,15 @@ border-radius: 0;
 			
 			.subtotal{
 				color:#7D1D1D; /*red*/
-				border-top:1px dashed red;
+				border-top:0px dashed red;
 				border-bottom:1px dashed red;
 			}
 			.grandtotal{
 				color:#3D7D1D; /*green*/
 				font-weight:bold;
-				border-top:1px dashed #3D7D1D;
-				border-top:1px dashed #3D7D1D;
+				padding-top:1em;
+				border-top:0px dashed #3D7D1D;
+				border-top:0px dashed #3D7D1D;
 			}
 			.key {
 				border:1px solid #3D7D1D;
@@ -257,6 +260,10 @@ border-radius: 0;
 				overflow:scroll;
 				font-size:.9em;
 			}
+			.key p {
+				margin:0px;
+				font-family:monospace;
+			}
 			.diceselectbox {
 				display:block;
 				
@@ -266,26 +273,25 @@ border-radius: 0;
 				padding: 0 2px;
 				height: 22px;
 				line-height:22px;
-				width:10%;
+				width:8%;
 			}
 			.inputdiv .key {
 				display:none;
 			}
-			@media only screen and (orientation : landscape) { 
-				.inputdiv    {
-					width:50%;
-					float:left;
-				}
-				.outputdiv    {
-					width:50%;
-					float:left;
-				}
-				.inputdiv .key {
-					display:block;
-				}
-				.outputdiv .key {
-					display:none;
-				}
+			
+			body.land .inputdiv {
+				width:50%;
+				float:left;
+			}
+			body.land .outputdiv    {
+				width:50%;
+				float:left;
+			}
+			body.land .inputdiv .key {
+				display:block;
+			}
+			body.land .outputdiv .key {
+				display:none;
 			}
 			
 		</style>
@@ -307,14 +313,12 @@ d(4,L)
 				<a 		class='gobuttons roll' href="#" onclick='doGo();return false;'><img src='img/badaman_dice.png' style='height:100%' class='dicelogo' /></a>
 				<input class='gobuttons clearabove' type='button' id='clearabove' 	value='&uArr;' onclick='doClear(true, false);'/>
 				
-				<select class='previousruns' style=''>
-					<option>----</option>
-					<option>--clear--</option>
-				</select>
-				<input class='gobuttons diceselect' type='image'  src='img/Anonymous_Keyboard_1_icon.png' onclick="toggleDiceSelect();"/>
+				<select class='previousruns' style=''></select>
+				<a 		class='gobuttons diceselect' href="#" onclick='toggleDiceSelect();return false;'><img src='img/Anonymous_Keyboard_1_icon.png' style='height:100%' class='dicelogo' /></a>
+				
 				<div class='diceselectbox' style='display:block'>
 					<input class='gobuttons question' type='button' value='d6' onclick="insertAtCaret('input','d(6)');"/>
-					<input class='gobuttons question' type='button' value='d20' onclick="insertAtCaret('input','d(20)');"/>
+					<input class='gobuttons question' type='button' value='d' onclick="insertAtCaret('input','d');"/>
 					
 					<input class='gobuttons question' type='button' value='(' onclick="insertAtCaret('input','(');"/>
 					<input class='gobuttons question' type='button' value=')' onclick="insertAtCaret('input',')');"/>
@@ -323,8 +327,9 @@ d(4,L)
 					<input class='gobuttons question' type='button' value='-' onclick="insertAtCaret('input','-');"/>
 					<input class='gobuttons question' type='button' value='*' onclick="insertAtCaret('input','*');"/>
 					<input class='gobuttons question' type='button' value='/' onclick="insertAtCaret('input','/');"/>
-					
-					
+					<input class='gobuttons question' type='button' value=',' onclick="insertAtCaret('input',',');"/>
+					<input class='gobuttons question' type='button' value='=' onclick="insertAtCaret('input','\r=\r\n');"/>
+					<br/>
 					<input class='gobuttons question' type='button' value='0' onclick="insertAtCaret('input','0');"/>
 					<input class='gobuttons question' type='button' value='1' onclick="insertAtCaret('input','1');"/>
 					<input class='gobuttons question' type='button' value='2' onclick="insertAtCaret('input','2');"/>
@@ -336,7 +341,6 @@ d(4,L)
 					<input class='gobuttons question' type='button' value='8' onclick="insertAtCaret('input','8');"/>
 					<input class='gobuttons question' type='button' value='9' onclick="insertAtCaret('input','9');"/>
 					
-					<input class='gobuttons question' type='button' value='=' onclick="insertAtCaret('input','\r=\r\n');"/>
 				</div>
 			</div>
 			<div class='buttonholder previousrunshold' style='display:none;'>
@@ -346,78 +350,99 @@ d(4,L)
 		<div class='key'>
 			<h4>Key:</h4>
 			<p>
-				dice = d(6); 2d6 = d(6,2); 
-				<br/>modify each roll: d(6,2,-1);  
-				<br/>make variables: Lvl = 7; 
-				<br/>use them: d(4,Lvl); 
-				<br/>do math: d(6)*2+Lvl; 
-				<br/>round down: rdown(d(6)/2); 
-				<br/>round up: rup(2/5); 
-				<br/>use any javascript functions: Math.Random();
-				<br/>
-				<br/>===
-				<br/><b>Simple Examples:</b>
-				<br/>Set a level:
-				<pre>L=6;</pre>
-				<br/>=
-				<br/>//Magic Missle
-				<br/>//	d(dicetype,how many rolls, modifier per roll)
-				<br/>d(4,(1 + rdown(L / 2)), 1);
-				<br/>=
-				<br/>//Burning Hands 
-				<br/>//	1d4 points of fire damage per caster level (maximum 5d4)
-				<br/>d(4,L)
-				<br/>=
-				<br/>//Floating Disk 
-				<br/>//	Close (25 ft. + 5 ft./2 levels), It can hold 100 pounds of weight per caster level.
-				<br/>25+(5*(1+rdown(L / 2)))//Range
-				<br/>(100*L); //Can Hold
-				<br/>=
-			
+				Quick Ref:
 			</p>
-			<a href="https://github.com/danfolkes/phonegap-dice/wiki/Examples">More Examples on Github</a>
+				<p>dice = d(6); 2d6 = d(6,2); </p>
+				<p>modify each roll: d(6,2,-1);</p>  
+				<p>make variables: Lvl = 7; </p>
+				<p>use them: d(4,Lvl); </p>
+				<p>do math: d(6)*2+Lvl; </p>
+				<p>round down: rdown(d(6)/2); </p>
+				<p>round up: rup(2/5); </p>
+				<p>use any javascript functions: Math.Random();</p>
+				
+				<p>===</p>
+				<p><b>Simple Examples:</b></p>
+				<p>Set a level:</p>
+				<p>L=6;</p>
+				<p>=</p>
+				<p><br/>//Burning Hands </p>
+				<p>//	1d4 points of fire damage per caster level</p>
+				<p>d(4,L)</p>
+				<p>=</p>
+				<p><br/>//Fireball</p>
+				<p>//  deals 1d6 points of fire damage per caster level</p>
+				<p>d(6,L)</p>
+				<p>=</p>
+				<p>//Range:	 Long (400 ft. + 40 ft./level)</p>
+				<p>400+(40*L)</p>
+				<p>=</p>
+				<p><br/>//Floating Disk </p>
+				<p>//	Close (25 ft. + 5 ft./2 levels), It can hold 100 pounds of weight per caster level.</p>
+				<p>25+(5*(1+rdown(L / 2)))//Range</p>
+				<p>(100*L); //Can Hold</p>
+				<p>=			</p>
+				<p><br/>//Magic Missle</p>
+				<p>//	d(dicetype,how many rolls, modifier per roll)</p>
+				<p>d(4,(1 + rdown(L / 2)), 1);</p>
+				<p>=</p>
 		</div>
 	
 		</div>
-		<div class='outputdiv'>
+		<div class='outputdiv' >
 			<div>
-				<h4>Results:<input class='clearbelow' type='button' id='clearbelow' 	value='x' onclick='doClear();'/></h4>
-				<div id="out"></div>
+				<div class='topbar'>
+					<h4>Results:
+						<input class='gobuttons clearbelow' style='height:2em;line-height:2em;' type='button' id='clearbelow' 	value='x' onclick='doClear();'/>
+						
+						<a target="_blank" href="https://github.com/danfolkes/phonegap-dice/wiki/Examples"><img src='img/github-10-48.png' style='height:2em' /></a>
+						<a href="#" onclick="toggleLayout();return false;"><img src='img/Actions-transform-rotate-icon.png' style='height:2em' /></a>
+					</h4>
+				</div>
+				<div id="out">
+				
+				</div>
 			</div>
 		<div class='key'>
 			<h4>Key:</h4>
-			<pre>dice = d(6); 2d6 = d(6,2); 
-modify each roll: d(6,2,-1);  
-make variables: Lvl = 7; 
-use them: d(4,Lvl); 
-do math: d(6)*2+Lvl; 
-round down: rdown(d(6)/2); 
-round up: rup(2/5); 
-use any javascript functions: Math.Random();
-
-===
-Examples:
-//Set a level:
-L=6;
-=
-//Magic Missle
-//	d(dicetype,how many rolls, modifier per roll)
-d(4,(1 + rdown(L / 2)), 1);
-=
-//Burning Hands 
-//	1d4 points of fire damage per caster level (maximum 5d4)
-d(4,L)
-=
-//Floating Disk 
-//	Close (25 ft. + 5 ft./2 levels), It can hold 100 pounds of weight per caster level.
-25+(5*(1+rdown(L / 2)))//Range
-(100*L); //Can Hold
-=
-			
-			</pre>
-			<a href="https://github.com/danfolkes/phonegap-dice/wiki/Examples">More Examples on Github</a>
+			<p>
+				Quick Ref:
+			</p>
+				<p>dice = d(6); 2d6 = d(6,2); </p>
+				<p>modify each roll: d(6,2,-1);</p>  
+				<p>make variables: Lvl = 7; </p>
+				<p>use them: d(4,Lvl); </p>
+				<p>do math: d(6)*2+Lvl; </p>
+				<p>round down: rdown(d(6)/2); </p>
+				<p>round up: rup(2/5); </p>
+				<p>use any javascript functions: Math.Random();</p>
+				
+				<p>===</p>
+				<p><b>Simple Examples:</b></p>
+				<p>Set a level:</p>
+				<p>L=6;</p>
+				<p>=</p>
+				<p><br/>//Burning Hands </p>
+				<p>//	1d4 points of fire damage per caster level</p>
+				<p>d(4,L)</p>
+				<p>=</p>
+				<p><br/>//Fireball</p>
+				<p>//  deals 1d6 points of fire damage per caster level</p>
+				<p>d(6,L)</p>
+				<p>=</p>
+				<p>//Range:	 Long (400 ft. + 40 ft./level)</p>
+				<p>400+(40*L)</p>
+				<p>=</p>
+				<p><br/>//Floating Disk </p>
+				<p>//	Close (25 ft. + 5 ft./2 levels), It can hold 100 pounds of weight per caster level.</p>
+				<p>25+(5*(1+rdown(L / 2)))//Range</p>
+				<p>(100*L); //Can Hold</p>
+				<p>=			</p>
+				<p><br/>//Magic Missle</p>
+				<p>//	d(dicetype,how many rolls, modifier per roll)</p>
+				<p>d(4,(1 + rdown(L / 2)), 1);</p>
+				<p>=</p>
 		</div>
-	
 		</div>
 	</body>
 </html>

@@ -1,29 +1,21 @@
-# Hello World PhoneGap Application
+# Calc Dice
 
-> A Hello World application built with PhoneGap
+> Calc Dice is a dice roller where you can enter equations and additional math to save you time rolling dice.
 
-## PhoneGap Build
+## View Web Version
 
-Create a new app with the following repository:
+	[http://danfolkes.com/etc/calc-dice/][1]
 
-    https://github.com/phonegap/phonegap-start.git
+## Android App
 
-## Run Application
+	Currently in Beta.  [Send me a message] [2]
+	You can run the Web Version on your mobile browser quite nicely.
 
-    /www/index.html
+	
+## Examples: 	
+	
+	View and update examples on the [Wiki][3]
 
-## Run Tests
-
-    /www/spec.html
-
-## Issues and Pull Requests
-
-This application is a modification of the [Apache Cordova Hello World][1].
-
-For issues with __the application__, please submit an issue or pull request
-to the [Apache Cordova source code][1].
-
-For issues with __the PhoneGap Build integration__, please submit
-an issue or pull request to this project.
-
-[1]: https://github.com/apache/cordova-app-hello-world
+[1]: http://danfolkes.com/etc/calc-dice/
+[2]: https://github.com/danfolkes
+[3]: https://github.com/danfolkes/phonegap-dice/wiki/Examples
