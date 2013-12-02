@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.danfolkes.pgdiceroller" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>Dice Roller</name>
+<widget id="com.danfolkes.pgdiceroller" version="1.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+    <name>Calc Dice - Latest</name>
     <description>
-        diceroller description
+        A Dice Roller that uses math
     </description>
     <author email="dan@folkes.me" href="dan.folkes.me">
         Daniel Folkes
