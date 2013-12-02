@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<meta name="viewport" content="width=device-width; maximum-scale=1; minimum-scale=1;" />
+		<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 		<script src="js/jquery-1.10.2.min.js" ></script>
 		<script src="js/amplify.min.js" ></script>
 		<script src="js/diceroller.js"></script>
@@ -25,11 +25,17 @@
 				color: #000;
 				
 			}
-			.topbar h4 .dicelogo {
-				height:2em;
+			.topbar h4 span{
+				width:50%;
+			}
+			.topbar h4 .dicelogo,  .rotateicon img, .topbar h4 .gobuttons {
+				width:12%;
+				max-width:1.75em;
 				vertical-align:middle;
 			}
-			
+			.rotateicon img {
+				width:19%;
+			}
 			#input {
 			
 			margin: 0em;
@@ -163,11 +169,13 @@ border-radius: 0;
 				
 			}
 			.gobuttons.roll{
-				width:30%;
+				width:40%;
 				font-weight: 500;
 				color: white;
 				background: #46ca5e;
 				box-shadow: none;
+				text-decoration:none;
+				font-weight:bolder;
 			}
 			.gobuttons.dicelogo {
 				width:50%;
@@ -176,16 +184,17 @@ border-radius: 0;
 				
 			}
 			.gobuttons.clearabove{
-				width:7%;
+				width:15%;
 				color: white;
 				background-color:red;
 				font-weight:bold;
 			}
 			.gobuttons.diceselect{
-				width:16%;
+				width:20%;
 				color: white;
 				background-color:blue;
 				font-weight:bold;
+				overflow:hidden;
 			}
 			.gobuttons.clearbelow{
 				width:10%;
@@ -212,10 +221,12 @@ border-radius: 0;
 				background:#FFF;
 				text-align:center;
 				position: relative;
+				border-top :1px solid #eeeeee;
 			}
 			.previousruns {
 				height:3em;
-				width:16%;
+				line-height:3em;
+				width:92%;
 			}
 			#out .eval {
 				background-color:rgba(255,255,255,.5);
@@ -249,7 +260,6 @@ border-radius: 0;
 			.key {
 				border:1px solid #3D7D1D;
 				background-color:white;
-				border-radius:5px;
 			}
 			.key h4{
 				margin:0px;
@@ -270,10 +280,11 @@ border-radius: 0;
 				width:100%;
 			}
 			.diceselectbox .gobuttons {
-				padding: 0 2px;
+				padding: 0 1px;
 				height: 22px;
 				line-height:22px;
 				width:8%;
+				min-width:1em;
 			}
 			.inputdiv .key {
 				display:none;
@@ -293,29 +304,28 @@ border-radius: 0;
 			body.land .outputdiv .key {
 				display:none;
 			}
-			
+			.previousrunshold h3{
+				margin:0;
+				padding:0;
+				font-size:.8em;
+				text-align:left;
+			}
 		</style>
 	</head>
 	<body>
 		<div class='inputdiv'>
 			<div class='topbar'>
-				<h4><img src='img/badaman_dice.png' class='dicelogo' />&nbsp;&nbsp;Dice Calc&nbsp;&nbsp;<img src='img/badaman_dice.png' class='dicelogo' /></h4>
+				<h4><img src='img/badaman_dice.png' class='dicelogo' /><span>&nbsp;&nbsp;Calc Dice&nbsp;&nbsp;</span><img src='img/badaman_dice.png' class='dicelogo' /></h4>
 			</div>
-			<textarea id="input"  rows="5" placeholder="Roll Calculations...">
+<textarea id="input"  rows="5" placeholder="Roll Calculations...">
 //Set Level
 L=5
 =
 //Burning Hands 
 // - 1d4 points of fire damage per caster level
 d(4,L)
-			</textarea>
+</textarea>
 			<div class='buttonholder'>
-				<a 		class='gobuttons roll' href="#" onclick='doGo();return false;'><img src='img/badaman_dice.png' style='height:100%' class='dicelogo' /></a>
-				<input class='gobuttons clearabove' type='button' id='clearabove' 	value='&uArr;' onclick='doClear(true, false);'/>
-				
-				<select class='previousruns' style=''></select>
-				<a 		class='gobuttons diceselect' href="#" onclick='toggleDiceSelect();return false;'><img src='img/Anonymous_Keyboard_1_icon.png' style='height:100%' class='dicelogo' /></a>
-				
 				<div class='diceselectbox' style='display:block'>
 					<input class='gobuttons question' type='button' value='d6' onclick="insertAtCaret('input','d(6)');"/>
 					<input class='gobuttons question' type='button' value='d' onclick="insertAtCaret('input','d');"/>
@@ -329,7 +339,7 @@ d(4,L)
 					<input class='gobuttons question' type='button' value='/' onclick="insertAtCaret('input','/');"/>
 					<input class='gobuttons question' type='button' value=',' onclick="insertAtCaret('input',',');"/>
 					<input class='gobuttons question' type='button' value='=' onclick="insertAtCaret('input','\r=\r\n');"/>
-					<br/>
+					
 					<input class='gobuttons question' type='button' value='0' onclick="insertAtCaret('input','0');"/>
 					<input class='gobuttons question' type='button' value='1' onclick="insertAtCaret('input','1');"/>
 					<input class='gobuttons question' type='button' value='2' onclick="insertAtCaret('input','2');"/>
@@ -342,9 +352,13 @@ d(4,L)
 					<input class='gobuttons question' type='button' value='9' onclick="insertAtCaret('input','9');"/>
 					
 				</div>
+				<a 		class='gobuttons roll' href="#" onclick='doGo();return false;'>ROLL!<img src='img/badaman_dice.png' style='height:100%;display:none;' class='dicelogo' /></a>
+				<input class='gobuttons clearabove' type='button' id='clearabove' 	value='&uArr;' onclick='doClear(true, false);'/>
+				<a 		class='gobuttons diceselect' href="#" onclick='toggleDiceSelect();return false;'><img src='img/Anonymous_Keyboard_1_icon.png' style='height:100%' class='dicelogo' /></a>
 			</div>
-			<div class='buttonholder previousrunshold' style='display:none;'>
-				
+			<div class='buttonholder previousrunshold' style=''>
+				<h3>Previous Rolls:</h3>
+				<select class='previousruns' style=''></select>
 			</div>
 			
 		<div class='key'>
@@ -386,6 +400,7 @@ d(4,L)
 				<p>//	d(dicetype,how many rolls, modifier per roll)</p>
 				<p>d(4,(1 + rdown(L / 2)), 1);</p>
 				<p>=</p>
+				<a target="_blank" href="https://github.com/danfolkes/phonegap-dice/wiki/Examples"><img src='img/github-10-48.png' style='height:2em' /> Learn More</a>
 		</div>
 	
 		</div>
@@ -395,8 +410,8 @@ d(4,L)
 					<h4>Results:
 						<input class='gobuttons clearbelow' style='height:2em;line-height:2em;' type='button' id='clearbelow' 	value='x' onclick='doClear();'/>
 						
-						<a target="_blank" href="https://github.com/danfolkes/phonegap-dice/wiki/Examples"><img src='img/github-10-48.png' style='height:2em' /></a>
-						<a href="#" onclick="toggleLayout();return false;"><img src='img/Actions-transform-rotate-icon.png' style='height:2em' /></a>
+						
+						<a href="#" onclick="toggleLayout();return false;" class='rotateicon'><img src='img/Actions-transform-rotate-icon.png' /></a>
 					</h4>
 				</div>
 				<div id="out">
@@ -442,6 +457,7 @@ d(4,L)
 				<p>//	d(dicetype,how many rolls, modifier per roll)</p>
 				<p>d(4,(1 + rdown(L / 2)), 1);</p>
 				<p>=</p>
+				<a target="_blank" href="https://github.com/danfolkes/phonegap-dice/wiki/Examples"><img src='img/github-10-48.png' style='height:2em' /> Learn More</a>
 		</div>
 		</div>
 	</body>

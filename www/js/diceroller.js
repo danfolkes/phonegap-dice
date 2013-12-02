@@ -147,11 +147,13 @@ function onDeviceReady() {
 	var drnOutput = amplify.store( "drnOutput" );
 	var drnPrevious = amplify.store( "drnPrevious" );
 	var drnLayoutPort = amplify.store( "drnLayoutPort" );
+	var drnShowKeyboard = amplify.store( "drnShowKeyboard" );
 	
 	drnInput = typeof drnInput !== 'undefined' ? drnInput : "";
 	drnOutput = typeof drnOutput !== 'undefined' ? drnOutput : "";
 	drnPrevious = typeof drnPrevious !== 'undefined' ? drnPrevious : null;
 	drnLayoutPort = typeof drnLayoutPort !== 'undefined' ? drnLayoutPort : true;
+	drnShowKeyboard = typeof drnShowKeyboard !== 'undefined' ? drnShowKeyboard : true;
 	
 	if (drnOutput.length > 0) {
 		$("#out").html(drnOutput);
@@ -189,8 +191,17 @@ function onDeviceReady() {
 	
 	if (drnLayoutPort == false) {
 		$("body").addClass("land");
-	} 
+	}
 
+	if (drnShowKeyboard) {
+		$(".diceselectbox").show();
+	} else {
+		$(".diceselectbox").hide();
+	}
+	
+	
+	
+	
 }
 function LoadPreviousDefaults() {
 	insertPrevious("d(6)");
@@ -199,6 +210,7 @@ function LoadPreviousDefaults() {
 }
 function toggleDiceSelect() {
 	$(".diceselectbox").toggle();
+	amplify.store( "drnShowKeyboard", $(".diceselectbox").is(':visible'));
 }
 function hideDiceSelect() {
 	$(".diceselectbox").hide();
