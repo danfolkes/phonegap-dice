@@ -108,7 +108,8 @@ function doGo() {
 			
 		output =  ""  + output ;
 		output += "<div class='grandtotal'>All Totals:" + drnTotalAll + "</div>";
-		$("#out").html("<div class='outputbox'>" + output + "</div>" + $("#out").html() );
+		$("#out").hide().html("<div class='outputbox'>" + output + "</div>" + $("#out").html() ).fadeIn( "slow" );
+		
 		
 		amplify.store( "drnInput",  inputVal);
 		amplify.store( "drnOutput", $("#out").html() );
